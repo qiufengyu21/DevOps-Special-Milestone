@@ -1,13 +1,23 @@
-image: gitlab/gitlab-ce:latest
+image: node:4.2.2
 
-before_script:
-  - apt-get update
-  - apt-get install -y curl
-  - curl -sL https://deb.nodesource.com/setup_9.x | bash -
-  - apt-get update
-  - apt-get install -y nodejs build-essential iproute2 git vim
-  - nodejs -v
-
-build:
+all_tests:
   script:
-    - docker run --cap-add=NET_ADMIN -p 3000:3000 --name cats -d chaos-workshop node main.js
+   - apt-get update
+   - apt-get install -y build-essential git vim curl
+   - apt-get install -y iproute2
+   - npm install
+   - node main.js
+
+# image: gitlab/gitlab-ce:latest
+
+# before_script:
+#   - apt-get update
+#   - apt-get install -y curl
+#   - curl -sL https://deb.nodesource.com/setup_9.x | bash -
+#   - apt-get update
+#   - apt-get install -y nodejs build-essential iproute2 git vim
+#   - nodejs -v
+
+# build:
+#   script:
+#     - docker run --cap-add=NET_ADMIN -p 3000:3000 --name cats -d chaos-workshop node main.js
