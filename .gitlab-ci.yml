@@ -80,32 +80,6 @@ performance:
       - branches
     kubernetes: active
 
-dependency_scanning:
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - setup_docker
-    - dependency_scanning
-  artifacts:
-    paths: [gl-dependency-scanning-report.json]
-sast:container:
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - setup_docker
-    - sast_container
-  artifacts:
-    paths: [gl-sast-container-report.json]
-
-
 review:
   stage: review
   script:
