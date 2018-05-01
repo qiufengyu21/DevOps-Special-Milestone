@@ -1,7 +1,8 @@
 image: docker:stable
 
 before_script:
-  - curl -sL https://deb.nodesource.com/setup_9.x | bash -
+  - apt0get install -y -qq curl
+  - curl -sL https://deb.nodesource.com/setup_9.x | sh -
   - apt-get update -qq
   - apt-get install -y -qq nodejs build-essential iproute2 git vim
   - nodejs -v
