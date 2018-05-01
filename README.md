@@ -28,13 +28,3 @@ Many of the scripts use traffic control, an advancd tool for setting networking 
 2. Execute scripts in /chaos.
 3. Observe and note any effect on the running service.
 4. Gather some simple timing measures (can use: `time curl localhost:3000/catfacts/101`).
-
-### Squeeze Testing
-
-By default a Docker container allocates unlimited cpu and memory. Try limiting the available cpu and memory settings with running the container. You can use these parameters:
-
-```
---cpus=".5"
--m 8m
-Most of these options take a positive integer, followed by a suffix of b, k, m, g, to indicate bytes, kilobytes, megabytes, or gigabytes.
-```
