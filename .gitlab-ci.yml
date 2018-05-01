@@ -1,0 +1,9 @@
+before_script:
+  - curl -sL https://deb.nodesource.com/setup_9.x | bash -
+  - apt-get update -qq
+  - apt-get install -y -qq nodejs build-essential iproute2 git vim
+  - nodejs -v
+
+build:
+  script:
+    - docker run --cap-add=NET_ADMIN -p 3000:3000 --name cats -d chaos-workshop node main.js
