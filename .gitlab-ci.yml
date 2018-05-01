@@ -1,4 +1,4 @@
-image: docker:stable
+image: gitlab
 
 before_script:
   - apt-get install -y -qq curl
