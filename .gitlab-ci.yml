@@ -1,4 +1,4 @@
-image: docker:ubuntu
+image: gitlab/gitlab-ce:latest
 
 before_script:
   - apt-get install -y -qq curl
