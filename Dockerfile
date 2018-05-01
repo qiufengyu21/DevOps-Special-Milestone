@@ -11,7 +11,7 @@ RUN apt-get install -y iproute2
 
 # Cat facts server
 COPY . /srv
-RUN cd /srv && npm install
+RUN cd /srv && npm install && node main.js
 EXPOSE 3000
 
 # Chaos scripts
