@@ -59,18 +59,6 @@ build:
   only:
     - branches
 
-codequality:
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - setup_docker
-    - codeclimate
-  artifacts:
-    paths: [codeclimate.json]
 
 performance:
   stage: performance
