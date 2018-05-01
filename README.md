@@ -38,7 +38,3 @@ By default a Docker container allocates unlimited cpu and memory. Try limiting t
 -m 8m
 Most of these options take a positive integer, followed by a suffix of b, k, m, g, to indicate bytes, kilobytes, megabytes, or gigabytes.
 ```
-
-### Reflection
-
-How could you extend this workshop to collect more measures and devise an automated experiment to understand which event/failure causes the most problems?
