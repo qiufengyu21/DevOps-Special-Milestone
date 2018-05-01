@@ -27,4 +27,3 @@ Many of the scripts use traffic control, an advancd tool for setting networking 
 1. Use `docker exec` to create a bash command to connect to running service. 
 2. Execute scripts in /chaos.
 3. Observe and note any effect on the running service.
-4. Gather some simple timing measures (can use: `time curl localhost:3000/catfacts/101`).
