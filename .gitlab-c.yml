@@ -29,22 +29,12 @@ variables:
   # AUTO_DEVOPS_DOMAIN is the application deployment domain and should be set as a variable at the group or project level.
   AUTO_DEVOPS_DOMAIN: 35.193.57.104.xip.io
 
-  POSTGRES_USER: user
-  POSTGRES_PASSWORD: testing-password
-  POSTGRES_ENABLED: "true"
-  POSTGRES_DB: $CI_ENVIRONMENT_SLUG
-
   KUBERNETES_VERSION: 1.8.6
   HELM_VERSION: 2.6.1
 
 stages:
   - build
-  - review
-  - staging
-  - canary
   - production
-  - performance
-  - cleanup
 
 build:
   stage: build
@@ -59,121 +49,10 @@ build:
   only:
     - branches
 
-
-performance:
-  stage: performance
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - setup_docker
-    - performance
-  artifacts:
-    paths:
-    - performance.json
-    - sitespeed-results/
-  only:
-    refs:
-      - branches
-    kubernetes: active
-
-review:
-  stage: review
-  script:
-    - check_kube_domain
-    - install_dependencies
-    - download_chart
-    - ensure_namespace
-    - install_tiller
-    - create_secret
-    - deploy
-    - persist_environment_url
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    url: http://$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_SLUG.$AUTO_DEVOPS_DOMAIN
-    on_stop: stop_review
-  artifacts:
-    paths: [environment_url.txt]
-  only:
-    refs:
-      - branches
-    kubernetes: active
-  except:
-    - master
-
-stop_review:
-  stage: cleanup
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - install_dependencies
-    - delete
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    action: stop
-  when: manual
-  allow_failure: true
-  only:
-    refs:
-      - branches
-    kubernetes: active
-  except:
-    - master
-
 # Keys that start with a dot (.) will not be processed by GitLab CI.
 # Staging and canary jobs are disabled by default, to enable them
 # remove the dot (.) before the job name.
 # https://docs.gitlab.com/ee/ci/yaml/README.html#hidden-keys
-
-# Staging deploys are disabled by default since
-# continuous deployment to production is enabled by default
-# If you prefer to automatically deploy to staging and
-# only manually promote to production, enable this job by removing the dot (.),
-# and uncomment the `when: manual` line in the `production` job.
-
-.staging:
-  stage: staging
-  script:
-    - check_kube_domain
-    - install_dependencies
-    - download_chart
-    - ensure_namespace
-    - install_tiller
-    - create_secret
-    - deploy
-  environment:
-    name: staging
-    url: http://$CI_PROJECT_PATH_SLUG-staging.$AUTO_DEVOPS_DOMAIN
-  only:
-    refs:
-      - master
-    kubernetes: active
-
-# Canaries are disabled by default, but if you want them,
-# and know what the downsides are, enable this job by removing the dot (.),
-# and uncomment the `when: manual` line in the `production` job.
-
-.canary:
-  stage: canary
-  script:
-    - check_kube_domain
-    - install_dependencies
-    - download_chart
-    - ensure_namespace
-    - install_tiller
-    - create_secret
-    - deploy canary
-  environment:
-    name: production
-    url: http://$CI_PROJECT_PATH_SLUG.$AUTO_DEVOPS_DOMAIN
-  when: manual
-  only:
-    refs:
-      - master
-    kubernetes: active
 
 # This job continuously deploys to production on every push to `master`.
 # To make this a manual process, either because you're enabling `staging`
@@ -190,7 +69,6 @@ production:
     - install_tiller
     - create_secret
     - deploy
-    - delete canary
     - persist_environment_url
   environment:
     name: production
@@ -216,69 +94,6 @@ production:
   export TILLER_NAMESPACE=$KUBE_NAMESPACE
   # Extract "MAJOR.MINOR" from CI_SERVER_VERSION and generate "MAJOR-MINOR-stable" for Security Products
   export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-
-  function sast_container() {
-    if [[ -n "$CI_REGISTRY_USER" ]]; then
-      echo "Logging to GitLab Container Registry with CI credentials..."
-      docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-      echo ""
-    fi
-
-    docker run -d --name db arminc/clair-db:latest
-    docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.1
-    apk add -U wget ca-certificates
-    docker pull ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
-    wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
-    mv clair-scanner_linux_amd64 clair-scanner
-    chmod +x clair-scanner
-    touch clair-whitelist.yml
-    retries=0
-    echo "Waiting for clair daemon to start"
-    while( ! wget -T 10 -q -O /dev/null http://docker:6060/v1/namespaces ) ; do sleep 1 ; echo -n "." ; if [ $retries -eq 10 ] ; then echo " Timeout, aborting." ; exit 1 ; fi ; retries=$(($retries+1)) ; done
-    ./clair-scanner -c http://docker:6060 --ip $(hostname -i) -r gl-sast-container-report.json -l clair.log -w clair-whitelist.yml ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG} || true
-  }
-
-  function codeclimate() {
-    docker run --env SOURCE_CODE="$PWD" \
-               --volume "$PWD":/code \
-               --volume /var/run/docker.sock:/var/run/docker.sock \
-               "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-  }
-
-  function sast() {
-    case "$CI_SERVER_VERSION" in
-      *-ee)
-
-        # Deprecation notice for CONFIDENCE_LEVEL variable
-        if [ -z "$SAST_CONFIDENCE_LEVEL" -a "$CONFIDENCE_LEVEL" ]; then
-          SAST_CONFIDENCE_LEVEL="$CONFIDENCE_LEVEL"
-          echo "WARNING: CONFIDENCE_LEVEL is deprecated and MUST be replaced with SAST_CONFIDENCE_LEVEL"
-        fi
-
-        docker run --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}" \
-                   --volume "$PWD:/code" \
-                   --volume /var/run/docker.sock:/var/run/docker.sock \
-                   "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/run /code
-        ;;
-      *)
-        echo "GitLab EE is required"
-        ;;
-    esac
-  }
-
-  function dependency_scanning() {
-    case "$CI_SERVER_VERSION" in
-      *-ee)
-        docker run --env DEP_SCAN_DISABLE_REMOTE_CHECKS="${DEP_SCAN_DISABLE_REMOTE_CHECKS:-false}" \
-                   --volume "$PWD:/code" \
-                   --volume /var/run/docker.sock:/var/run/docker.sock \
-                   "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:$SP_VERSION" /code
-        ;;
-      *)
-        echo "GitLab EE is required"
-        ;;
-    esac
-  }
 
   function deploy() {
     track="${1-stable}"
@@ -368,14 +183,6 @@ production:
     fi
   }
 
-  function setup_test_db() {
-    if [ -z ${KUBERNETES_PORT+x} ]; then
-      DB_HOST=postgres
-    else
-      DB_HOST=localhost
-    fi
-    export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST}:5432/${POSTGRES_DB}"
-  }
 
   function download_chart() {
     if [[ ! -d chart ]]; then
@@ -471,25 +278,6 @@ production:
       -o yaml --dry-run | kubectl replace -n "$KUBE_NAMESPACE" --force -f -
   }
 
-
-  function performance() {
-    export CI_ENVIRONMENT_URL=$(cat environment_url.txt)
-
-    mkdir gitlab-exporter
-    wget -O gitlab-exporter/index.js https://gitlab.com/gitlab-org/gl-performance/raw/10-5/index.js
-
-    mkdir sitespeed-results
-
-    if [ -f .gitlab-urls.txt ]
-    then
-      sed -i -e 's@^@'"$CI_ENVIRONMENT_URL"'@' .gitlab-urls.txt
-      docker run --shm-size=1g --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:6.3.1 --plugins.add ./gitlab-exporter --outputFolder sitespeed-results .gitlab-urls.txt
-    else
-      docker run --shm-size=1g --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:6.3.1 --plugins.add ./gitlab-exporter --outputFolder sitespeed-results "$CI_ENVIRONMENT_URL"
-    fi
-
-    mv sitespeed-results/data/performance.json performance.json
-  }
 
   function persist_environment_url() {
       echo $CI_ENVIRONMENT_URL > environment_url.txt
