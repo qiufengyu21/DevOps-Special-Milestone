@@ -1,14 +1,8 @@
-
-image: node:latest
+image: gitlab/dind
 
 stages:
-  - npminstall
   - build
   - deploy
-
-npminstall:
-  stage: npminstall
-  script: npm install
 
 build_docker_image:
   stage: build
