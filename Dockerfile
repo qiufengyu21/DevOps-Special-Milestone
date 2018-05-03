@@ -16,4 +16,4 @@ EXPOSE 3000
 
 WORKDIR /srv
 
-CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
