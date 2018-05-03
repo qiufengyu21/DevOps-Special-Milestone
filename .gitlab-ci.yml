@@ -1,0 +1,25 @@
+
+image: node:latest
+
+stages:
+  - npminstall
+  - build
+  - deploy
+
+npminstall:
+  stage: npminstall
+  script: npm install
+
+build_docker_image:
+  stage: build
+  script:
+  - docker login registry.gitlab.com
+  - docker build -t registry.gitlab.com/sshankjha/chaos .
+  - docker push registry.gitlab.com/sshankjha/chaos
+  
+deploy_stage:
+  stage: deploy
+  script:
+  - docker login registry.gitlab.com
+  - docker pull registry.gitlab.com/sshankjha/chaos
+  - docker run --cap-add=NET_ADMIN -p 3000:3000 registry.gitlab.com/sshankjha/chaos
