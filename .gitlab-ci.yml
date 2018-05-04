@@ -25,7 +25,6 @@ production:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   - docker pull registry.gitlab.com/sshankjha/chaos
   - docker run --cap-add=NET_ADMIN -p 80:3000 --name cats_production -d registry.gitlab.com/sshankjha/chaos node main.js
-  when:
-  - manual
+  when: manual
   
   
