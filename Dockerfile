@@ -22,6 +22,15 @@ RUN apt-get update
 RUN apt-get install -y mongodb
 RUN rm /var/lib/mongodb/mongod.lock
 RUN service mongodb restart
-RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+# RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
 
-WORKDIR /srv
+#nginx
+RUN apt-get install -y nginx
+COPY ./checkbox.io /checkbox.io
+COPY /checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf
+COPY /checkbox.io/local-conf/default /etc/nginx/sites-available/default
+RUN cd /checkbox.io/server-side/site && npm install
+RUN service nginx restart
+
+
+# WORKDIR /srv
