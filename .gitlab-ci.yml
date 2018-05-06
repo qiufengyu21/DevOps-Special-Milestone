@@ -10,7 +10,7 @@ build:
   - docker build -t registry.gitlab.com/sshankjha/chaos .
   - docker push registry.gitlab.com/sshankjha/chaos
   
-production:
+staging:
   stage: staging
   script:
   - docker rm -f cats_staging || true
