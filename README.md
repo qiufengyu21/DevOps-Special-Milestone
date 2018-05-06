@@ -6,7 +6,7 @@
 3. Qiufeng Yu (qyu4)
 4. Bhavik Patel	(bcpatel)
 
-In this milestone, we deployed checkbox using GitLab. It consisted of three stages, build, deploy to staging area and then deploy to production area manually.
+In this milestone, we deployed checkbox using GitLab. It consisted of three stages, build, deploy to staging area and then deploy to production manually with just a single click.
 
 ## Why GitLab?
 
@@ -40,7 +40,7 @@ For learning and demo purpose, we decided to deploy a dockerized version of [che
 
     b. staging: Pulls image from registry, deletes any previous running docker container and then runs updated version.
 
-    c. production: If we are satisfied with our application in staging area, we can push it to production area. Here also, we stop older version of our app and then deploy the latest one. We delibrately added manual step for production using `when: manual`.
+    c. production: If we are satisfied with our application in staging area, we can push it to production area. Here also, we stop older version of our app and then deploy the latest one. Using `when: manual` in our 'production' stage allows us to perform a single click to deploy.
 
 Since we are using single VM for running both staging and production steps, we had to assign different ports for them, ie, staging app will be available in 3000 port and production app will be available in 80 port. This can easily be changed as we are using Docker's port publish option.
 
