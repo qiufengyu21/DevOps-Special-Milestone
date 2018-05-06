@@ -9,6 +9,7 @@ build:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   - docker build -t registry.gitlab.com/sshankjha/chaos .
   - docker push registry.gitlab.com/sshankjha/chaos
+  - cd checkbox.io/server-side/site && npm install
   
 staging:
   stage: staging
