@@ -25,7 +25,7 @@ production:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   - docker pull registry.gitlab.com/sshankjha/chaos
   - docker run --cap-add=NET_ADMIN -p 80:80 --name cats_production -d registry.gitlab.com/sshankjha/chaos /bin/bash -c "service mongodb restart && service nginx restart && node server.js"  
-  - docker exec -it cats_production mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+  - docker exec -it cats_production mongo admin --eval "db.createUser({user: 'admin',pwd:'admin123', roles:[{role:'root',db:'admin'}]});"
 # when: manual
   
   
