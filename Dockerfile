@@ -13,7 +13,6 @@ RUN apt-get install -y mongodb
 
 #nginx
 RUN apt-get install -y nginx
-CMD service nginx restart
 COPY ./checkbox.io /checkbox.io
 COPY /checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf
 COPY /checkbox.io/local-conf/default /etc/nginx/sites-available/default
