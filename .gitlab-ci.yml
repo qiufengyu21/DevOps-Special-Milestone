@@ -1,6 +1,6 @@
 stages:
   - build
-  - staging
+#   - staging
   - production
 
 build:
@@ -10,13 +10,13 @@ build:
   - docker build -t registry.gitlab.com/sshankjha/chaos .
   - docker push registry.gitlab.com/sshankjha/chaos
   
-staging:
-  stage: staging
-  script:
-  - docker rm -f cats_staging || true
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-  - docker pull registry.gitlab.com/sshankjha/chaos
-  - docker run --cap-add=NET_ADMIN -p 3000:3000 --name cats_staging -d registry.gitlab.com/sshankjha/chaos node main.js
+# staging:
+#   stage: staging
+#   script:
+#   - docker rm -f cats_staging || true
+#   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#   - docker pull registry.gitlab.com/sshankjha/chaos
+#   - docker run --cap-add=NET_ADMIN -p 3000:3000 --name cats_staging -d registry.gitlab.com/sshankjha/chaos node main.js
 
 production:
   stage: production
@@ -24,7 +24,7 @@ production:
   - docker rm -f cats_production || true
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   - docker pull registry.gitlab.com/sshankjha/chaos
-  - docker run --cap-add=NET_ADMIN -p 80:80 --name cats_production -d registry.gitlab.com/sshankjha/chaos
-  when: manual
+  - docker run --cap-add=NET_ADMIN -p 80:80 --name cats_production -d registry.gitlab.com/sshankjha/chaos node /checkbox.io/server-side/site   
+# when: manual
   
   
