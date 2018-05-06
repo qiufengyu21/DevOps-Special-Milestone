@@ -20,13 +20,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF505
 RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.6.list
 RUN apt-get update
 RUN apt-get install -y mongodb
-CMD service mongodb restart
-# RUN rm /var/lib/mongodb/mongod.lock
-# RUN service mongodb restart 
-# RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
-# RUN service mongodb status
-# RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
-
 
 #nginx
 RUN apt-get install -y nginx
@@ -35,13 +28,5 @@ COPY ./checkbox.io /checkbox.io
 COPY /checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf
 COPY /checkbox.io/local-conf/default /etc/nginx/sites-available/default
 RUN cd /checkbox.io/server-side/site && npm install
-
-WORKDIR /checkbox.io/server-side/site
-
-# RUN service mongodb status
-# RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
-
-# RUN service nginx restart
-
 
 # WORKDIR /srv
