@@ -16,7 +16,7 @@ In this milestone, we deployed checkbox using GitLab. It consisted of three stag
 
 GitLab is a single product for the complete DevOps lifecycle. So rather than using GitHub for version control, Jenkins for CI/CD, JIRA for issue tracking, etc, we can just use GitLab and reduce the toolchain complexity and speed up cycle times. It uses an open-source license as well.
 
-![GitLab DevOps Coverage]()
+![GitLab DevOps Coverage](GitLabDevOps.png)
 
 ### Features:
 
@@ -28,7 +28,7 @@ GitLab is a single product for the complete DevOps lifecycle. So rather than usi
 
 4. 3rd Party Integration: If one still wants to use 3rd party applications rather than using GitLab one, we can still use it as it supports integration for Jenkins, Slack, Google Cloud Platform, etc.
 
-5. GitHub Features: Most of the features which are present in GitHub are already present here. We have been using GitLab for past 3-4 weeks and we cannot find anything which is present in GitHub but not in GitLab (surely there must be few, but we are not missing it yet).
+5. GitHub Features: Most of the features which are present in GitHub are already present here.
 
 6. Kubernetes Support: With a built-in container registry and Kubernetes integration, GitLab makes it easier than ever to get started with containers and cloud native development. Also, canary deployments, monitoring, auto-devops, etc is possible because of this integration.
  
@@ -37,12 +37,12 @@ GitLab is a single product for the complete DevOps lifecycle. So rather than usi
 For learning and demo purpose, we decided to deploy a dockerized version of [checkbox](https://github.com/chrisparnin/checkbox.io/) app. Our target was to learn more about dockers and different stages which can be added in GitLab's CI pipeline. Hence, we decided to build the docker image first and then deploy it in two area: staging and production. To achieve this, we added two files:
 
 
-1. [Dockerfile](https://gitlab.com/sshankjha/Chaos/blob/master/Dockerfile) Here, all the commands required to assemble a docker image. Steps for installation of nodejs, mongodb and nginx are present here.
+1. [Dockerfile](https://github.ncsu.edu/sjha5/SpecialMilestone/blob/master/Dockerfile) Here, all the commands required to assemble a docker image. Steps for installation of nodejs, mongodb and nginx are present here.
 
 
-2. [.gitlab-ci.yml](https://gitlab.com/sshankjha/Chaos/blob/master/.gitlab-ci.yml): To take advantage of [GitLab's CI](https://about.gitlab.com/features/gitlab-ci-cd/), we need to add a `.gitlab-ci.yml` file to the root directory of our repository. For each commit, a runner (isolated machines) runs the code defined in `.gitlab-ci.yml.` In our case, we have three stages defined in the pipeline:
+2. [.gitlab-ci.yml](https://github.ncsu.edu/sjha5/SpecialMilestone/blob/master/.gitlab-ci.yml): To take advantage of [GitLab's CI](https://about.gitlab.com/features/gitlab-ci-cd/), we need to add a `.gitlab-ci.yml` file to the root directory of our repository. For each commit, a runner (isolated machines) runs the code defined in `.gitlab-ci.yml.` In our case, we have three stages defined in the pipeline:
 
-    a. build: Builds the docker image based on the [Dockerfile](https://gitlab.com/sshankjha/Chaos/blob/master/Dockerfile) and then pushes it to GitLab's registry.
+    a. build: Builds the docker image based on the [Dockerfile](https://github.ncsu.edu/sjha5/SpecialMilestone/blob/master/Dockerfile) and then pushes it to GitLab's registry.
 
     b. staging: Pulls image from registry, deletes any previous running docker container and then runs updated version.
 
