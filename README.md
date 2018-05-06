@@ -42,7 +42,7 @@ For learning and demo purpose, we decided to deploy a dockerized version of [che
 
     c. production: If we are satisfied with our application in staging area, we can push it to production area. Here also, we stop older version of our app and then deploy the latest one. We delibrately added manual step for production using `when: manual`.
 
-Since we are using single VM for running both staging and production steps, we had to assign different ports for them, ie, staging app will be available in 3000 port and production port will be available in 80 port. This can easily be changed as we are using Docker's port publish option.
+Since we are using single VM for running both staging and production steps, we had to assign different ports for them, ie, staging app will be available in 3000 port and production app will be available in 80 port. This can easily be changed as we are using Docker's port publish option.
 
 ### Future Plans:
 
