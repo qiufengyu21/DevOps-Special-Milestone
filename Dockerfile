@@ -23,6 +23,9 @@ RUN apt-get install -y mongodb
 # RUN rm /var/lib/mongodb/mongod.lock
 RUN service mongodb restart
 # RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+RUN service mongodb status
+RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+
 
 #nginx
 RUN apt-get install -y nginx
