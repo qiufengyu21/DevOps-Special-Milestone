@@ -33,6 +33,10 @@ COPY ./checkbox.io /checkbox.io
 COPY /checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf
 COPY /checkbox.io/local-conf/default /etc/nginx/sites-available/default
 RUN cd /checkbox.io/server-side/site && npm install
+
+RUN service mongodb status
+RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+
 RUN service nginx restart
 
 
