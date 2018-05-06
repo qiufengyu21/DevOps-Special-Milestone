@@ -21,7 +21,7 @@ RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-
 RUN apt-get update
 RUN apt-get install -y mongodb
 # RUN rm /var/lib/mongodb/mongod.lock
-RUN service mongodb restart
+# RUN service mongodb restart 
 # RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
 # RUN service mongodb status
 # RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
@@ -34,10 +34,10 @@ COPY /checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf
 COPY /checkbox.io/local-conf/default /etc/nginx/sites-available/default
 RUN cd /checkbox.io/server-side/site && npm install
 
-RUN service mongodb status
-RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
+# RUN service mongodb status
+# RUN mongo admin --eval "db.createUser({user: 'admin', pwd: 'admin123', roles:[{role:'root',db:'admin'}]});"
 
-RUN service nginx restart
+# RUN service nginx restart
 
 
 # WORKDIR /srv
