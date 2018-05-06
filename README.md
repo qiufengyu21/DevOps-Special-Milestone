@@ -6,11 +6,17 @@
 3. Qiufeng Yu (qyu4)
 4. Bhavik Patel	(bcpatel)
 
+[Screencast]() 
+
+[Click here for GitLab repo](https://gitlab.com/sshankjha/Chaos) 
+
 In this milestone, we deployed checkbox using GitLab. It consisted of three stages, build, deploy to staging area and then deploy to production manually with just a single click.
 
-## Why GitLab?
+## Why we decided to use GitLab?
 
-GitLab is an online Git repository manager with a wiki, issue tracking, CI and CD. It uses an open-source license as well. Having it all in one place simplifies toolchain complexity and speeds up cycle times.  
+GitLab is a single product for the complete DevOps lifecycle. So rather than using GitHub for version control, Jenkins for CI/CD, JIRA for issue tracking, etc, we can just use GitLab and reduce the toolchain complexity and speed up cycle times. It uses an open-source license as well.
+
+![GitLab DevOps Coverage]()
 
 ### Features:
 
@@ -18,13 +24,13 @@ GitLab is an online Git repository manager with a wiki, issue tracking, CI and C
 
 2. CI/CD: GitLab has in-built pipeline which can replace Jenkins. Hence, we can verify if the merge request will break our app or not.
 
-3. Docker registry: GitLab has in built registry which stores docker images. Hence, rather than using public registry at hub.docker.com, we can use this feature.
+3. Docker Registry: GitLab has in built registry which stores docker images. Hence, rather than using public registry at hub.docker.com, we can use this feature.
 
-4. 3rd party integration: If one still wants to use 3rd party applications rather than using GitLab one, we can still use it as it supports integration for Jenkins, Slack, Google Cloud Platform, etc.
+4. 3rd Party Integration: If one still wants to use 3rd party applications rather than using GitLab one, we can still use it as it supports integration for Jenkins, Slack, Google Cloud Platform, etc.
 
-5. GitHub features: Most of the features which are present in GitHub are already present here. We have been using GitLab for past 3-4 weeks and we cannot find anything which is present in GitHub but not in GitLab (surely there must be few, but we are not missing it yet).
+5. GitHub Features: Most of the features which are present in GitHub are already present here. We have been using GitLab for past 3-4 weeks and we cannot find anything which is present in GitHub but not in GitLab (surely there must be few, but we are not missing it yet).
 
-6. Kubernetes Support: With a built-in container registry and Kubernetes integration, GitLab makes it easier than ever to get started with containers and cloud native development. Also, canary deployments, monitoring, auto-devops, etc is possible because of this integration
+6. Kubernetes Support: With a built-in container registry and Kubernetes integration, GitLab makes it easier than ever to get started with containers and cloud native development. Also, canary deployments, monitoring, auto-devops, etc is possible because of this integration.
  
 ## Our Project:
 
@@ -44,6 +50,13 @@ For learning and demo purpose, we decided to deploy a dockerized version of [che
 
 Since we are using single VM for running both staging and production steps, we had to assign different ports for them, ie, staging app will be available in 3000 port and production app will be available in 80 port. This can easily be changed as we are using Docker's port publish option.
 
-### Future Plans:
+## Difficulties Faced:
+
+1. As GitLab is still not as popular as GitHub, we found it difficult to search for solutions. Most of the official guides present were for Ruby projects. Hence, working on nodejs project meant we had to put in extra effort.
+
+2. [Auto-Devops](https://docs.gitlab.com/ee/topics/autodevops/#features) is still in beta version. With auto devops enabled, it automatically detects, builds, tests, deploys, and monitors our applications. Additionally, it does code quality check, dependency scanning, review apps, etc. However, as it is only in beta phase, support for nodejs projects is still limited. We tried to customize the auto devops pipeline to fit our project but lack of proper guides and examples meant that we had to skip this. However, we are sure that once they have fully supported auto devops feature, more and more people will start using GitLab.
+  
+
+## Future Plans:
 
 Though we were able to achieve our inital target, we are yet to take full advantage of GitLab's features. For eg, we could have added test stage before deploying as well. Also, we want to use  [GitLab's Kubernetes Integration](https://about.gitlab.com/kubernetes/) as well. Deploying it in Kubernetes has the added advantage of easy scaling and having [canary release](https://docs.gitlab.com/ee/user/project/canary_deployments.html) as well. Hence, we will be working on these later for our learning purpose.
