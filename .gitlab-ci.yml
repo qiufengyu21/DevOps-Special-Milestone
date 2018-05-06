@@ -24,7 +24,6 @@ production:
   - docker rm -f cats_production || true
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   - docker pull registry.gitlab.com/sshankjha/chaos
-  - docker run --cap-add=NET_ADMIN -p 80:80 --name cats_production -d registry.gitlab.com/sshankjha/chaos /bin/bash -c "chmod 755 /checkbox.io/startScript.sh && /checkbox.io/startScript.sh"  
-when: manual
-  
+  - docker run --cap-add=NET_ADMIN -p 80:80 --name cats_production -d registry.gitlab.com/sshankjha/chaos /bin/bash -c "chmod 755 /checkbox.io/startScript.sh && /checkbox.io/startScript.sh"
+
   
