@@ -1,10 +1,10 @@
 # Special Milestone: GitLab
 
 ## Team Members:
-1. Karan Jadhav	(kjadhav)
-2. Shashank Jha	(sjha5)	
-3. Qiufeng Yu (qyu4)
-4. Bhavik Patel	(bcpatel)
+1. Karan Jadhav	(kjadhav) - Gitlab
+2. Shashank Jha	(sjha5)	- Gitlab
+3. Qiufeng Yu (qyu4) - Presentation
+4. Bhavik Patel	(bcpatel) - Presentation
 
 [Screencast](https://youtu.be/L9PxT4h6r9Y) 
 
